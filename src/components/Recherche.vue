@@ -33,10 +33,10 @@ export default {
     search: function () {
       fetch(this.url) // La réponse d'un fetch est une promesse, il faut donc un "then" pour la promesse résolue et un "catch" pour la promesse non résolue
       .then((response) => { return response.json() }) 
-      .catch((error) => { console.log('error') })
+      .catch((error) => { return error })
       .then((result) => { this.$emit('sendResult', result) //variable $emit native de JS, permet d'envoyer des données de l'enfant au parent, il faut créer un événement virtuel (ici, "sendResult") qui va être appelé au submit
       }) // ATTENTION !!! le "this" utilisé ici n'est pas dans le scope global, ça ne fonctionne donc pas si on utilise des fonctions normales
-      .catch((error) => { console.log('error') })
+      .catch((error) => { return error })
     },
     clear: function () {
       this.cityField = ''
