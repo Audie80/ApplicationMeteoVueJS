@@ -13,36 +13,31 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Recherche',
-  props: {
-    appid: String
-  },
-  data: function () {
-    return {
-      cityField: ''
-    }
-  },
-  computed: {
-    url: function () {
-      return `https://api.openweathermap.org/data/2.5/forecast?q=${this.cityField},fr&units=metric&lang=fr&APPID=${this.appid}`
-    }
-  },
-  methods: {
-    search: function () {
-      fetch(this.url) // La réponse d'un fetch est une promesse, il faut donc un "then" pour la promesse résolue et un "catch" pour la promesse non résolue
-      .then((response) => { return response.json() }) 
-      .catch((error) => { return error })
-      .then((result) => { this.$emit('sendResult', result) //variable $emit native de JS, permet d'envoyer des données de l'enfant au parent, il faut créer un événement virtuel (ici, "sendResult") qui va être appelé au submit
-      }) // ATTENTION !!! le "this" utilisé ici n'est pas dans le scope global, ça ne fonctionne donc pas si on utilise des fonctions normales
-      .catch((error) => { return error })
-    },
-    clear: function () {
-      this.cityField = ''
-      this.$emit('destroyResult')
-    }
-  }
+<script setup>
+import { ref, computed } from 'vue'
+import { defineProps, defineEmits } from 'vue'
+
+const props = defineProps({
+  appid: String
+})
+const emit = defineEmits(['sendResult', 'destroyResult'])
+
+const cityField = ref('')
+const url = computed(() => `https://api.openweathermap.org/data/2.5/forecast?q=${cityField.value},fr&units=metric&lang=fr&APPID=${props.appid}`)
+
+function search() {
+  fetch(url.value)
+    .then((response) => response.json())
+    .catch((error) => error)
+    .then((result) => {
+      emit('sendResult', result)
+    })
+    .catch((error) => error)
+}
+
+function clear() {
+  cityField.value = ''
+  emit('destroyResult')
 }
 </script>
 
