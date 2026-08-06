@@ -19,14 +19,13 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Meteo',
-  props: {
-    prevCity: Object,
-    prevList: Array
-  },
-}
+<script setup>
+import { defineProps } from 'vue'
+
+const props = defineProps({
+  prevCity: Object,
+  prevList: Array
+})
 </script>
 
 <style scoped>

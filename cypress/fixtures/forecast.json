@@ -1,0 +1,24 @@
+{
+  "cod": "200",
+  "message": 0,
+  "cnt": 2,
+  "list": [
+    {
+      "dt_txt": "2026-08-07 12:00:00",
+      "main": { "temp": 20, "humidity": 55 },
+      "weather": [{ "description": "ciel dégagé" }]
+    },
+    {
+      "dt_txt": "2026-08-07 15:00:00",
+      "main": { "temp": 21, "humidity": 50 },
+      "weather": [{ "description": "léger vent" }]
+    }
+  ],
+  "city": {
+    "id": 123456,
+    "name": "Brest",
+    "coord": { "lat": 48.3904, "lon": -4.4861 },
+    "country": "FR",
+    "population": 0
+  }
+}

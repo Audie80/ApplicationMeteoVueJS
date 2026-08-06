@@ -1,42 +1,69 @@
 <template>
   <div id="app">
     <!-- D'après le component "Recherche", on peut créer une balise Recherche -->
-    <Recherche :appid="appid" @sendResult="setMeteo" @destroyResult="prevMeteo=null" /> <!-- On a créé un événement "sendResult" dans Recherche.vue pour l'envoi des données -->
+    <Recherche :appid="appid" @sendResult="setMeteo" @destroyResult="clearSearch" />
     <br />
-    <meteo v-if="prevMeteo" :prevCity="prevCity" :prevList="prevList" />
+    <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+    <Meteo v-if="prevMeteo && prevCity && prevList" :prevCity="prevCity" :prevList="prevList" />
   </div>
 </template>
 
-<script>
-import Recherche from './components/Recherche.vue' // Permet d'importer le composant "Recherche"
+<script setup>
+import { ref } from 'vue'
+import Recherche from './components/Recherche.vue'
 import Meteo from './components/Meteo.vue'
 
-export default { // Obligatoire d'exporter pour pouvoir l'importer dans main.js
-  name: 'app', // Ce sera le name qui sera demandé pour l'import
-  components: {
-    Recherche, // après l'import, créer un component
-    Meteo
-  },
-  data: function () { // les datas sont stockées dans une fonction qui retourne un objet contenant les datas
-    return {
-      appid: 'ede43546901b070d546c670b9b2cb824', // clé de l'API weather
-      prevMeteo: null, // variable où seront stockés les results
-      prevCity: null,
-      prevList: null
-    }
-  },
-  methods: {
-    setMeteo: function (result) { // méthode appelée par l'événement virtuel "sendResult"
-      //alert('Transmission des données')
-      this.prevMeteo = result // qui affecte les données dans la variable prevMeteo
-      this.prevCity = this.prevMeteo.city
-      this.prevList = this.prevMeteo.list
-    }
+const appid = '444c73811ab3b4ff4a67341e1974fd19'
+const prevMeteo = ref(null)
+const prevCity = ref(null)
+const prevList = ref(null)
+const errorMessage = ref('')
+
+function setMeteo(result) {
+  if (!result || typeof result !== 'object') {
+    errorMessage.value = 'Résultat API invalide.'
+    prevMeteo.value = null
+    prevCity.value = null
+    prevList.value = null
+    return
   }
+
+  if ('cod' in result && Number(result.cod) !== 200) {
+    errorMessage.value = result.message || 'Ville introuvable.'
+    prevMeteo.value = null
+    prevCity.value = null
+    prevList.value = null
+    return
+  }
+
+  if (!result.city || !result.list) {
+    errorMessage.value = 'Résultat API invalide.'
+    prevMeteo.value = null
+    prevCity.value = null
+    prevList.value = null
+    return
+  }
+
+  errorMessage.value = ''
+  prevMeteo.value = result
+  prevCity.value = result.city
+  prevList.value = result.list
+}
+
+function clearSearch() {
+  errorMessage.value = ''
+  prevMeteo.value = null
+  prevCity.value = null
+  prevList.value = null
 }
 </script>
 
 <style>
+.error {
+  color: red;
+  margin-bottom: 1rem;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

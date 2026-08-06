@@ -2,47 +2,62 @@
   <div>
     <form @submit.prevent="search">
       <div class="form">
-        <input type="text" v-model="cityField" />
+        <input type="text" v-model="cityField" placeholder="Entrez une ville" data-cy="search-input" />
       </div>
+      <div v-if="errorMessage" class="error" data-cy="search-error">{{ errorMessage }}</div>
       <br />
       <div class="form">
-        <input class="submit" type="submit" :disabled="cityField == ''" />
+        <input class="submit" type="submit" :disabled="!cityFieldTrimmed" data-cy="search-submit" />
       </div>
     </form>
-    <button @click="clear">x</button>
+    <button @click="clear" data-cy="search-clear">x</button>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Recherche',
-  props: {
-    appid: String
-  },
-  data: function () {
-    return {
-      cityField: ''
-    }
-  },
-  computed: {
-    url: function () {
-      return `https://api.openweathermap.org/data/2.5/forecast?q=${this.cityField},fr&units=metric&lang=fr&APPID=${this.appid}`
-    }
-  },
-  methods: {
-    search: function () {
-      fetch(this.url) // La réponse d'un fetch est une promesse, il faut donc un "then" pour la promesse résolue et un "catch" pour la promesse non résolue
-      .then((response) => { return response.json() }) 
-      .catch((error) => { return error })
-      .then((result) => { this.$emit('sendResult', result) //variable $emit native de JS, permet d'envoyer des données de l'enfant au parent, il faut créer un événement virtuel (ici, "sendResult") qui va être appelé au submit
-      }) // ATTENTION !!! le "this" utilisé ici n'est pas dans le scope global, ça ne fonctionne donc pas si on utilise des fonctions normales
-      .catch((error) => { return error })
-    },
-    clear: function () {
-      this.cityField = ''
-      this.$emit('destroyResult')
-    }
+<script setup>
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+  appid: String
+})
+const emit = defineEmits(['sendResult', 'destroyResult'])
+
+const cityField = ref('')
+const errorMessage = ref('')
+const cityFieldTrimmed = computed(() => cityField.value.trim())
+const url = computed(() => {
+  const city = encodeURIComponent(`${cityFieldTrimmed.value},fr`)
+  return `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&lang=fr&appid=${props.appid}`
+})
+
+async function search() {
+  if (!cityFieldTrimmed.value) {
+    errorMessage.value = 'Veuillez saisir un nom de ville valide.'
+    return
   }
+
+  try {
+    const response = await fetch(url.value)
+    const result = await response.json()
+
+    if (!response.ok) {
+      errorMessage.value = result.message || 'Erreur OpenWeather'
+      emit('sendResult', { cod: result.cod || response.status, message: errorMessage.value })
+      return
+    }
+
+    errorMessage.value = ''
+    emit('sendResult', result)
+  } catch (error) {
+    errorMessage.value = error?.message || 'Erreur réseau'
+    emit('sendResult', { cod: 500, message: errorMessage.value })
+  }
+}
+
+function clear() {
+  cityField.value = ''
+  errorMessage.value = ''
+  emit('destroyResult')
 }
 </script>
 
