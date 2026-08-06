@@ -2,15 +2,15 @@
   <div>
     <form @submit.prevent="search">
       <div class="form">
-        <input type="text" v-model="cityField" placeholder="Entrez une ville" />
+        <input type="text" v-model="cityField" placeholder="Entrez une ville" data-cy="search-input" />
       </div>
-      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+      <div v-if="errorMessage" class="error" data-cy="search-error">{{ errorMessage }}</div>
       <br />
       <div class="form">
-        <input class="submit" type="submit" :disabled="!cityFieldTrimmed" />
+        <input class="submit" type="submit" :disabled="!cityFieldTrimmed" data-cy="search-submit" />
       </div>
     </form>
-    <button @click="clear">x</button>
+    <button @click="clear" data-cy="search-clear">x</button>
   </div>
 </template>
 

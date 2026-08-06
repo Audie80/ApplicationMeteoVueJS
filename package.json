@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+
   },
   "dependencies": {
     "core-js": "^3.36.1",
@@ -13,7 +16,9 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^5.0.9",
     "@vue/cli-service": "^5.0.9",
-    "@vue/compiler-sfc": "^3.5.41"
+    "@vue/compiler-sfc": "^3.5.41",
+    "cypress": "^12.17.1",
+    "typescript": "6.0.3"
   },
   "postcss": {
     "plugins": {
