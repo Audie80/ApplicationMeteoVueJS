@@ -18,7 +18,7 @@
     "@vue/cli-service": "^5.0.9",
     "@vue/compiler-sfc": "^3.5.41",
     "cypress": "^15.20.0",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   },
   "postcss": {
     "plugins": {
