@@ -7,23 +7,14 @@
     "build": "vue-cli-service build",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
-
   },
   "dependencies": {
-    "core-js": "^3.51.0",
     "vue": "^3.5.44"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^5.0.9",
     "@vue/cli-service": "^5.0.9",
-    "@vue/compiler-sfc": "^3.5.44",
-    "cypress": "^16.2.0",
-    "typescript": "7.0.2"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+    "cypress": "^16.2.0"
   },
   "browserslist": [
     "> 1%",
