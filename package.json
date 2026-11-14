@@ -9,7 +9,7 @@
     "cypress:run": "cypress run"
   },
   "dependencies": {
-    "vue": "^3.5.44"
+    "vue": "^3.5.45"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^5.0.9",
